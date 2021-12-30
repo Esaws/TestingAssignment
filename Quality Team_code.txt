@@ -1,0 +1,78 @@
+package QualityTeam;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+public class StepDefinitions {
+
+	WebDriver driver = null;
+
+	@Given("Open browser and enter URL")
+	public void open_browser_and_enter_url() {
+
+		WebDriverManager.chromedriver().setup();
+
+		driver = new ChromeDriver();
+
+		driver.manage().window().maximize();
+
+		driver.get("https://login.dev.qa-experience.com");
+
+		driver.manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS);
+
+		driver.manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS);
+
+	}
+
+	@When("Enter Useraname Password and Login button")
+	public void enter_useraname_password_and_login_button() throws InterruptedException {
+
+		driver.findElement(By.name("loginUsername")).sendKeys("test@qa-experience.com");
+
+		// optional
+		Thread.sleep(1000);
+
+		driver.findElement(By.name("loginPassword")).sendKeys("Password1");
+
+		Thread.sleep(1000);
+
+		driver.findElement(By.xpath("//button[contains(text(),'Login')]")).click();
+
+	}
+
+	@Then("Homepage should be displayed with a message {string}")
+	public void homepage_should_be_displayed_with_a_message(String string) {
+		
+		
+		assertEquals(driver.findElement(By.xpath("//*[text()[contains(.,'Successfully logged in!')]]")).getText(),"Successfully logged in!");
+		
+			
+
+		System.out.println("Successfully logged in!");
+
+	}
+	@Then("close browser")
+	public void close_browser() {
+		
+		driver.quit();
+
+	}
+
+}
+
+
+
+
+
